@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './styles/post.css';
 import Avatar from '@material-ui/core/Avatar';
 
-const Post = () => {
+const Post = ({username, caption, imgUrl}) => {
+
+   
+
     return (
         <div className="post">
             
@@ -13,15 +16,15 @@ const Post = () => {
                     alt="username"
                     src="/static/images/avatar/1.jpg"
                 />
-                <h3>Username</h3>
+                <h3>{username}</h3>
             </div>
             
 
             {/* image */}
-            <img src="https://www.talkwalker.com/images/2020/blog-headers/image-analysis.png" alt="" className="post__image"/>
+            <img src={imgUrl} alt="" className="post__image"/>
 
             {/* username and caption */}
-            <h4 className="post__text"><strong>usrname</strong> Eye is the window to the world </h4>
+            <h4 className="post__text"><strong>{username}</strong> {caption} </h4>
 
             
         </div>
