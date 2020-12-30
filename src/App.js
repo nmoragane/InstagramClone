@@ -33,6 +33,7 @@ function App() {
 
   const [post,setPost] = useState([]);
   const [open, setOpen] = useState(false);
+  const [openSignIn, setOpenSignIn] = useState(false);
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -44,14 +45,6 @@ function App() {
         //logged in
         console.log(authUser)
         setUser(authUser);
-
-        if(authUser.displayName) {
-          //dont update username
-        } else {
-          return authUser.updateProfile({
-            displayName: username,
-          })
-        }
       } else {
         //logged out
         setUser(null);
@@ -78,7 +71,19 @@ function App() {
     event.preventDefault();
 
     auth.createUserWithEmailAndPassword(email, password)
+    .then((authUser)=> {
+      return authUser.user.updateProfile({
+        displayName:username
+      })
+    })
     .catch((error) => alert(error.message));
+  }
+  const signIn = (event) => {
+    event.preventDefault();
+    auth.signInWithEmailAndPassword(email,password)
+      .catch((err)=> alert(err.message))
+
+    setOpenSignIn(false)
   }
 
   
@@ -99,7 +104,23 @@ function App() {
             <Button onClick={signUp}>Sign Up</Button>
           </form>          
         </div>
-      </Modal> 
+      </Modal>
+
+      {/* modal for sign in */}
+
+      <Modal open = {openSignIn} onClose={() => setOpenSignIn(false)}>
+        <div style={modalStyle} className={classes.paper}>
+          <form className="app__signup">
+            <center>
+              <img src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png" alt="" className="app__headerImage"/>
+            </center>
+                      
+            <Input placeholder="Email" type="text" value={email} onChange={(e)=> setEmail(e.target.value)}/>          
+            <Input placeholder="Password" type="password" value={password} onChange={(e)=> setPassword(e.target.value)}/>          
+            <Button onClick={signIn}>Sign In</Button>
+          </form>          
+        </div>
+      </Modal>  
 
       {/* header */}
       <div className="app__header">
@@ -107,7 +128,14 @@ function App() {
 
       </div>
 
-      <Button onClick={() => setOpen(true)}>Sign Up</Button>
+      {user ? (
+        <Button onClick={() => auth.signOut()}>Log Out</Button>
+      ):(
+        <div className="app__loginbutton">
+          <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
+          <Button onClick={() => setOpen(true)}>Sign Up</Button>
+        </div>
+      )}
 
     {/* posts */}
 
