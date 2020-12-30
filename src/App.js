@@ -78,10 +78,11 @@ function App() {
     })
     .catch((error) => alert(error.message));
   }
+
   const signIn = (event) => {
     event.preventDefault();
     auth.signInWithEmailAndPassword(email,password)
-      .catch((err)=> alert(err.message))
+      .catch((err)=> alert(err.message));
 
     setOpenSignIn(false)
   }
