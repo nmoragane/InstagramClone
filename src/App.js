@@ -58,7 +58,7 @@ function App() {
   },[user, username])
 
   useEffect(()=>{
-    db.collection('posts').onSnapshot(snapshot => {
+    db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
 
 
       setPost(snapshot.docs.map(doc => ({
@@ -93,11 +93,7 @@ function App() {
   return (
     <div className="app">
 
-      {/* uploading images */}
-      <ImageUpload/>
-      {/* caption input */}
-      {/* file picker */}
-      {/* post button */}
+      
 
       <Modal open = {open} onClose={() => setOpen(false)}>
         <div style={modalStyle} className={classes.paper}>
@@ -133,34 +129,40 @@ function App() {
       {/* header */}
       <div className="app__header">
         <img src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png" alt="" className="app__headerImage"/>
+        {user ? (
+          <Button onClick={() => auth.signOut()}>Log Out</Button>
+          ):(
+            <div className="app__loginContainer">
+            <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
+            <Button onClick={() => setOpen(true)}>Sign Up</Button>
+          </div>
+        )}
 
       </div>
 
-      {user ? (
-        <Button onClick={() => auth.signOut()}>Log Out</Button>
-      ):(
-        <div className="app__loginbutton">
-          <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
-          <Button onClick={() => setOpen(true)}>Sign Up</Button>
-        </div>
-      )}
 
     {/* posts */}
 
     {
       post.map(({id, post}) => (
         <Post
-          key={id}
-          username={post.username} 
-          caption={post.caption}
-          imgUrl={post.imgUrl}/>
-      ))
-    }
+        key={id}
+        username={post.username} 
+        caption={post.caption}
+        imgUrl={post.imgUrl}/>
+        ))
+      }
 
     <Post username="Nayomal Lakshitha" caption="Eye is the window" imgUrl="https://www.talkwalker.com/images/2020/blog-headers/image-analysis.png"/>
     <Post username="Elon Musk" caption="Trees are life" imgUrl="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"/>
     <Post username="Din Djarin" caption="Sun is the window" imgUrl="https://c.ndtvimg.com/ixgy7hgcuds_surya-grahan-201_625x300.jpg"/>
     
+    {/* uploading images */}
+    {username.displayName ? (
+      <ImageUpload username={user.displayName}/>        
+    ):(
+      <h3>Sorry you need to Login to upload... </h3>
+    )}
 
     {/*  */}
       
