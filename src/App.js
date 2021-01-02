@@ -3,6 +3,7 @@ import Post from './Post';
 import './styles/App.css';
 import {auth, db} from './firebase'
 import { Button, Input, makeStyles, Modal } from '@material-ui/core';
+import ImageUpload from './ImageUpload';
 
 function getModalStyle() {
   const top = 50 ;
