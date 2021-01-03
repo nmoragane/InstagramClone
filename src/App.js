@@ -4,6 +4,7 @@ import './styles/App.css';
 import {auth, db} from './firebase'
 import { Button, Input, makeStyles, Modal } from '@material-ui/core';
 import ImageUpload from './ImageUpload';
+import InstagramEmbed from 'react-instagram-embed';
 
 function getModalStyle() {
   const top = 50 ;
@@ -142,16 +143,38 @@ function App() {
 
 
     {/* posts */}
+    <div className="app_posts">
+      <div className="app_postsLeft">
+        {
+          post.map(({id, post}) => (
+            <Post
+            key={id}
+            username={post.username} 
+            caption={post.caption}
+            imgUrl={post.imgUrl}/>
+            ))
+        }
+      </div>
+      
+      <div className="app_postsRight">
+        <InstagramEmbed
+          url='https://instagr.am/p/Zw9o4/'
+          clientAccessToken='123|456'
+          maxWidth={320}
+          hideCaption={false}
+          containerTagName='div'
+          protocol=''
+          injectScript
+          onLoading={() => {}}
+          onSuccess={() => {}}
+          onAfterRender={() => {}}
+          onFailure={() => {}}
+        /> 
 
-    {
-      post.map(({id, post}) => (
-        <Post
-        key={id}
-        username={post.username} 
-        caption={post.caption}
-        imgUrl={post.imgUrl}/>
-        ))
-      }
+      </div>
+    </div>    
+
+       
 
     <Post username="Nayomal Lakshitha" caption="Eye is the window" imgUrl="https://www.talkwalker.com/images/2020/blog-headers/image-analysis.png"/>
     <Post username="Elon Musk" caption="Trees are life" imgUrl="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__340.jpg"/>
