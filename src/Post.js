@@ -1,8 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './styles/post.css';
 import Avatar from '@material-ui/core/Avatar';
+import { db } from './firebase';
 
-const Post = ({username, caption, imgUrl}) => {
+const Post = ({postId, username, caption, imgUrl}) => {
+    const [comments, setComments] = useState([])
+    const [comment, setComment] = useState('')
+
+    useEffect (() => {
+        let unsubscribe;
+        if (postId) {
+            unsubscribe = db
+                .collection('posts')
+                .doc(postId)
+                .collection('comments')
+                .onSnapshot((snapshot) => {
+                    setComments(snapshot.docs.map((doc) => doc.data()));
+                });
+        }
+        return () => {
+            unsubscribe();
+        };
+    }, [postId]);
+
+    const postComment = (event) => {
+
+    }
 
    
 
@@ -26,7 +49,13 @@ const Post = ({username, caption, imgUrl}) => {
             {/* username and caption */}
             <h4 className="post__text"><strong>{username}</strong> {caption} </h4>
 
-            
+            <form action="" className="post__commnetBox">
+                <input type="text" className="post__input"
+                    placeholder="Add comment..." value={comment}
+                    onChange={(e) => setComment(e.target.value)}/>
+            </form>
+            <button className="post__button"
+                disabled={!comment} type="submit" onClick={postComment}> Post</button>
         </div>
     );
 };
