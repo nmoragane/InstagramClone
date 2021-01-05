@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import './styles/post.css';
 import Avatar from '@material-ui/core/Avatar';
 import { db } from './firebase';
+import firebase from 'firebase';
 
-const Post = ({postId, username, caption, imgUrl}) => {
+const Post = ({postId, user, username, caption, imgUrl}) => {
     const [comments, setComments] = useState([])
     const [comment, setComment] = useState('')
 
@@ -14,6 +15,7 @@ const Post = ({postId, username, caption, imgUrl}) => {
                 .collection('posts')
                 .doc(postId)
                 .collection('comments')
+                .orderBy('timestamp', 'desc')
                 .onSnapshot((snapshot) => {
                     setComments(snapshot.docs.map((doc) => doc.data()));
                 });
@@ -24,7 +26,14 @@ const Post = ({postId, username, caption, imgUrl}) => {
     }, [postId]);
 
     const postComment = (event) => {
+        event.preventDefault();
 
+        db.collection("posts").doc(postId).collection("comments").add({
+            text: comment,
+            username: user.displayName,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        });
+        setComments('');
     }
 
    
